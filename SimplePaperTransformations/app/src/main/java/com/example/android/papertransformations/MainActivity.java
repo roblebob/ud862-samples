@@ -23,6 +23,7 @@ import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,6 +50,7 @@ public class MainActivity extends Activity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerview);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(new RecyclerView.Adapter<ViewHolder>() {
+            @NonNull
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
                 return new ViewHolder(getLayoutInflater().inflate(R.layout.list_item, parent, false));
@@ -81,9 +83,9 @@ public class MainActivity extends Activity {
             itemView.setOnClickListener(this);
 
             if (green == 0)
-                green = itemView.getContext().getResources().getColor(R.color.green);
+                green = itemView.getContext().getResources().getColor(R.color.green, null);
             if (white == 0)
-                white = itemView.getContext().getResources().getColor(R.color.background_material_light);
+                white = itemView.getContext().getResources().getColor(R.color.background_material_light, null);
         }
 
         @Override
