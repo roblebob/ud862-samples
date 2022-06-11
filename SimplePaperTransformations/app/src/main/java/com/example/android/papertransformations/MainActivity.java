@@ -47,17 +47,17 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout)).setTitle(getString(R.string.app_name));
-        RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerview);
+        RecyclerView rv = findViewById(R.id.recyclerview);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(new RecyclerView.Adapter<ViewHolder>() {
             @NonNull
             @Override
-            public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
+            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
                 return new ViewHolder(getLayoutInflater().inflate(R.layout.list_item, parent, false));
             }
 
             @Override
-            public void onBindViewHolder(ViewHolder viewHolder, int position) {
+            public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
                 viewHolder.text1.setText(baconTitle);
                 viewHolder.text2.setText(baconText);
             }
@@ -78,8 +78,8 @@ public class MainActivity extends Activity {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            text1 = (TextView) itemView.findViewById(android.R.id.text1);
-            text2 = (TextView) itemView.findViewById(android.R.id.text2);
+            text1 = itemView.findViewById(android.R.id.text1);
+            text2 = itemView.findViewById(android.R.id.text2);
             itemView.setOnClickListener(this);
 
             if (green == 0)
@@ -90,16 +90,16 @@ public class MainActivity extends Activity {
 
         @Override
         public void onClick(View view) {
-            boolean isVeggie = ((ColorDrawable)view.getBackground()) != null && ((ColorDrawable)view.getBackground()).getColor() == green;
+            boolean isVeggie = view.getBackground() != null && ((ColorDrawable)view.getBackground()).getColor() == green;
 
-            int finalRadius = (int)Math.hypot(view.getWidth()/2, view.getHeight()/2);
+            int finalRadius = (int)Math.hypot(view.getWidth()/2., view.getHeight()/2.);
 
             if (isVeggie) {
                 text1.setText(baconTitle);
                 text2.setText(baconText);
                 view.setBackgroundColor(white);
             } else {
-                Animator anim = ViewAnimationUtils.createCircularReveal(view, (int) view.getWidth()/2, (int) view.getHeight()/2, 0, finalRadius);
+                Animator anim = ViewAnimationUtils.createCircularReveal(view, view.getWidth() /2, view.getHeight() /2, 0, finalRadius);
                 text1.setText(veggieTitle);
                 text2.setText(veggieText);
                 view.setBackgroundColor(green);
