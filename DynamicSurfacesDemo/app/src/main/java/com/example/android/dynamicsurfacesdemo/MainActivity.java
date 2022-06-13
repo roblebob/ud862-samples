@@ -18,7 +18,8 @@ package com.example.android.dynamicsurfacesdemo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 public class MainActivity extends Activity {
     @Override
