@@ -11,6 +11,8 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel target="1.8" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="ud862-samples.ScrollEventsDemo.app" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>
