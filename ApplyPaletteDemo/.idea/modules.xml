@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ScrollEventsDemo.iml" filepath="$PROJECT_DIR$/ScrollEventsDemo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ApplyPaletteDemo.iml" filepath="$PROJECT_DIR$/.idea/modules/ApplyPaletteDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ApplyPaletteDemo.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ApplyPaletteDemo.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ApplyPaletteDemo.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ApplyPaletteDemo.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ApplyPaletteDemo.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ApplyPaletteDemo.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ApplyPaletteDemo.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ApplyPaletteDemo.app.unitTest.iml" />
     </modules>
   </component>
 </project>
