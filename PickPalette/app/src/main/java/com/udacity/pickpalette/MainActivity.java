@@ -22,17 +22,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.graphics.Palette;
-import android.support.v7.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import androidx.palette.graphics.Palette;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
@@ -44,28 +46,57 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 
+
+import com.udacity.pickpalette.databinding.ActivityMainBinding;
+
+
 public class MainActivity extends Activity {
 
-    @InjectView(R.id.fab)
-    FloatingActionButton fab;
+    //@InjectView(R.id.fab)
+    //FloatingActionButton fab;
+
     SwatchAdapter swatchAdapter;
-    @InjectView(R.id.grid_view)
-    GridView gridView;
-    @InjectView(R.id.tool_bar)
-    Toolbar toolbar;
-    @InjectView(R.id.imageView)
-    ImageView imageView;
+
+    //@InjectView(R.id.grid_view)
+    //GridView gridView;
+
+    //@InjectView(R.id.tool_bar)
+    //Toolbar toolbar;
+
+    //@InjectView(R.id.imageView)
+    //ImageView imageView;
+
     int numPixels;
+
+
+    ActivityMainBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View root = binding.getRoot();
+        setContentView(root);
 
-        ButterKnife.inject(this);
+        //ButterKnife.inject(this);
 
-        toolbar.setTitle(getString(R.string.app_name));
+        binding.toolBar.setTitle(getString(R.string.app_name));
+
+        binding.fab.setOnClickListener((View view) -> {
+            Snackbar.make(findViewById(R.id.fragment), "Clicked FAB.", Snackbar.LENGTH_LONG)
+                    //.setAction("Action", this)
+                    .show();
+
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            PickerFragment pickerFragment = new PickerFragment();
+            pickerFragment.show(getFragmentManager(), "dialog");
+            ft.commit();
+        });
+
+
 
     }
 
@@ -92,32 +123,19 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.fab)
-    public void click(View view){
-        Snackbar.make(findViewById(R.id.fragment), "Clicked FAB.", Snackbar.LENGTH_LONG)
-                //.setAction("Action", this)
-                .show();
 
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        PickerFragment pickerFragment = new PickerFragment();
-        pickerFragment.show(getFragmentManager(), "dialog");
-        ft.commit();
-
-
-    }
 
     public void createPalette(Object object){
         Bitmap bitmap;
         try {
             if (object instanceof Uri) {
                 Uri imageUri = (Uri) object;
-                Picasso.with(this).load(imageUri).into(imageView);
+                Picasso.get().load(imageUri).into(binding.imageView);
                 InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 bitmap = BitmapFactory.decodeStream(imageStream);
             } else {
                 bitmap = (Bitmap) object;
-                imageView.setImageBitmap(bitmap);
+                binding.imageView.setImageBitmap(bitmap);
             }
 
             // Do this async on activity
@@ -127,7 +145,20 @@ public class MainActivity extends Activity {
                 public void onGenerated(Palette palette) {
                     HashMap map = processPalette(palette);
                     swatchAdapter = new SwatchAdapter(getApplicationContext(), map.entrySet().toArray());
-                    gridView.setAdapter(swatchAdapter);
+                    binding.gridView.setAdapter(swatchAdapter);
+
+                    binding.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            Palette.Swatch swatch = ((Map.Entry<String, Palette.Swatch>) binding.gridView.getItemAtPosition(position)).getValue();
+
+                            StringBuilder b = new StringBuilder();
+                            b.append("Title Text Color: ").append("#" + Integer.toHexString(swatch.getBodyTextColor()).toUpperCase()).append("\n");
+                            b.append("Population: ").append(swatch.getPopulation());
+
+                            Snackbar.make(binding.gridView, b.toString(), Snackbar.LENGTH_LONG).show();
+                        }
+                    });
                 }
             });
 
@@ -157,15 +188,15 @@ public class MainActivity extends Activity {
         return map;
     }
 
-    @OnItemClick(R.id.grid_view)
-    void onItemClick(int position) {
-        Palette.Swatch swatch = ((Map.Entry<String, Palette.Swatch>) gridView.getItemAtPosition(position)).getValue();
-
-        StringBuilder b = new StringBuilder();
-        b.append("Title Text Color: ").append("#" + Integer.toHexString(swatch.getBodyTextColor()).toUpperCase()).append("\n");
-        b.append("Population: ").append(swatch.getPopulation());
-
-        Snackbar.make(gridView, b.toString(), Snackbar.LENGTH_LONG).show();
-    }
+    //@OnItemClick(R.id.grid_view)
+//    void onItemClick(int position) {
+//        Palette.Swatch swatch = ((Map.Entry<String, Palette.Swatch>) binding.gridView.getItemAtPosition(position)).getValue();
+//
+//        StringBuilder b = new StringBuilder();
+//        b.append("Title Text Color: ").append("#" + Integer.toHexString(swatch.getBodyTextColor()).toUpperCase()).append("\n");
+//        b.append("Population: ").append(swatch.getPopulation());
+//
+//        Snackbar.make(binding.gridView, b.toString(), Snackbar.LENGTH_LONG).show();
+//    }
 
 }

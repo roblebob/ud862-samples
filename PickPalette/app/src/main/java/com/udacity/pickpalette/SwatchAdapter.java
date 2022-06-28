@@ -16,12 +16,13 @@
 package com.udacity.pickpalette;
 
 import android.content.Context;
-import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import androidx.palette.graphics.Palette;
 
 import java.util.HashMap;
 import java.util.Map;

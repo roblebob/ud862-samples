@@ -23,8 +23,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +32,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+
 import com.squareup.picasso.Picasso;
+import com.udacity.pickpalette.databinding.FragmentPickerBinding;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -47,20 +49,36 @@ public class PickerFragment extends DialogFragment {
     private static final int PICK_PHOTO = 100;
     private static final int TAKE_PHOTO = 101;
 
-    @InjectView(R.id.pickImage)Button pickImage;
-    @InjectView(R.id.takeImage)Button takeImage;
+    // @InjectView(R.id.pickImage)Button pickImage;
+    // @InjectView(R.id.takeImage)Button takeImage;
 
+
+    FragmentPickerBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_picker, container, false);
-        ButterKnife.inject(this, view);
+
+        binding = FragmentPickerBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
+        //ButterKnife.inject(this, view);
+        binding.pickImage.setOnClickListener( (View view) -> {
+            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+            photoPickerIntent.setType("image/*");
+            startActivityForResult(photoPickerIntent, PICK_PHOTO);
+        });
+        binding.takeImage.setOnClickListener( (View view) -> {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                startActivityForResult(cameraIntent, TAKE_PHOTO);
+            }
+        });
+
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-
-        return view;
+        return root;
     }
 
     @Override
@@ -69,23 +87,23 @@ public class PickerFragment extends DialogFragment {
 
     }
 
-    @OnClick(R.id.pickImage)
-    void pickImage(View view) {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, PICK_PHOTO);
-    }
+//    @OnClick(R.id.pickImage)
+//    void pickImage(View view) {
+//        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+//        photoPickerIntent.setType("image/*");
+//        startActivityForResult(photoPickerIntent, PICK_PHOTO);
+//    }
 
-    @OnClick(R.id.takeImage)
-    void takeImage(View view) {
-//        Snackbar.make(getView(), "I want to take an image.", Snackbar.LENGTH_SHORT)
-//                .show();
-
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(cameraIntent, TAKE_PHOTO);
-        }
-    }
+//    @OnClick(R.id.takeImage)
+//    void takeImage(View view) {
+////        Snackbar.make(getView(), "I want to take an image.", Snackbar.LENGTH_SHORT)
+////                .show();
+//
+//        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+//            startActivityForResult(cameraIntent, TAKE_PHOTO);
+//        }
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
