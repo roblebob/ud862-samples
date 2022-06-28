@@ -17,6 +17,7 @@ package com.udacity.md_typograhical_scale;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import com.udacity.md_typograhical_scale.databinding.FragmentMainBinding;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -33,13 +36,18 @@ import butterknife.InjectView;
  */
 public class MainActivityFragment extends Fragment {
 
-    @InjectView(R.id.display4)
-    TextView display4View;
+//    @InjectView(R.id.display4)
+//    TextView display4View;
+//
+//    @InjectView(R.id.headline)
+//    TextView headlineView;
 
-    @InjectView(R.id.headline)
-    TextView headlineView;
+
 
     Typeface courgette;
+
+
+    FragmentMainBinding binding;
 
 
     public MainActivityFragment() {
@@ -48,21 +56,26 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_main, container, false);
-        ButterKnife.inject(this, view);
+
+        binding = FragmentMainBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
+//        View view =  inflater.inflate(R.layout.fragment_main, container, false);
+//        ButterKnife.inject(this, view);
+
         /*
         display4View = (TextView)getActivity().findViewById(R.id.display4);
         headlineView = (TextView)getActivity().findViewById(R.id.headline);
          */
 
-        display4View.setTypeface(courgette);
-        headlineView.setTypeface(courgette);
-        return view;
+        binding.display4.setTypeface(courgette);
+        binding.headline.setTypeface(courgette);
+        return root;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         courgette = Typeface.createFromAsset(getActivity().getAssets(), "Courgette-Regular.ttf");
     }
 }
