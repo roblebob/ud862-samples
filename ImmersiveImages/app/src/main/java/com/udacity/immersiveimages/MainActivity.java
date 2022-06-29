@@ -18,7 +18,7 @@ package com.udacity.immersiveimages;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,30 +35,55 @@ import butterknife.OnClick;
 
 import static android.widget.ImageView.*;
 
-public class MainActivity extends AppCompatActivity {
-    @InjectView(R.id.imageView) ImageView imageView;
+import androidx.appcompat.app.AppCompatActivity;
 
-    // Radio Buttons
-    @InjectView(R.id.noneBtn) RadioButton noneBtn;
-    @InjectView(R.id.centerBtn) RadioButton centerBtn;
-    @InjectView(R.id.centerCropBtn) RadioButton centerCropBtn;
-    @InjectView(R.id.centerInsideBtn) RadioButton centerInsideBtn;
-    @InjectView(R.id.fitCenterBtn) RadioButton fitCenterBtn;
-    @InjectView(R.id.fitEndBtn) RadioButton fitEndBtn;
-    @InjectView(R.id.fitStartBtn) RadioButton fitStartBtn;
-    @InjectView(R.id.fitXYBtn) RadioButton fitXYBtn;
-    @InjectView(R.id.matrixBtn) RadioButton matrixBtn;
+import com.udacity.immersiveimages.databinding.ActivityMainBinding;
+
+public class MainActivity extends AppCompatActivity {
+    
+    
+//    @InjectView(R.id.imageView) ImageView imageView;
+//
+//    // Radio Buttons
+//    @InjectView(R.id.noneBtn) RadioButton noneBtn;
+//    @InjectView(R.id.centerBtn) RadioButton centerBtn;
+//    @InjectView(R.id.centerCropBtn) RadioButton centerCropBtn;
+//    @InjectView(R.id.centerInsideBtn) RadioButton centerInsideBtn;
+//    @InjectView(R.id.fitCenterBtn) RadioButton fitCenterBtn;
+//    @InjectView(R.id.fitEndBtn) RadioButton fitEndBtn;
+//    @InjectView(R.id.fitStartBtn) RadioButton fitStartBtn;
+//    @InjectView(R.id.fitXYBtn) RadioButton fitXYBtn;
+//    @InjectView(R.id.matrixBtn) RadioButton matrixBtn;
 
     Matrix matrix;
 
+    ActivityMainBinding binding;
+
+
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View root = binding.getRoot();
+        setContentView(root);
 
-        ButterKnife.inject(this);
 
-        fitCenterBtn.setChecked(true);
+        //ButterKnife.inject(this);
+
+        RadioButton [] btns = {binding.centerBtn, binding.centerCropBtn, binding.centerInsideBtn,
+                binding.fitCenterBtn, binding.fitEndBtn, binding.fitStartBtn, binding.fitXYBtn,
+                binding.matrixBtn, binding.noneBtn};
+
+        for (RadioButton radioButton : btns) {
+            radioButton.setOnClickListener( (View view) -> {
+                 clickRadioButton((RadioButton) view);
+            });
+        }
+
+
+        binding.fitCenterBtn.setChecked(true);
         matrix = new Matrix();
         matrix.postScale(0.5f, 0.5f);
         matrix.postTranslate(100,100);
@@ -87,8 +112,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public RadioButton getSelectedRadio(View view) {
-        RadioButton [] btns = {centerBtn,centerCropBtn,centerInsideBtn,fitCenterBtn,
-          fitEndBtn,fitStartBtn,fitXYBtn,matrixBtn, noneBtn};
+        RadioButton [] btns = {binding.centerBtn, binding.centerCropBtn, binding.centerInsideBtn,
+                binding.fitCenterBtn, binding.fitEndBtn, binding.fitStartBtn, binding.fitXYBtn,
+                binding.matrixBtn, binding.noneBtn};
         for (RadioButton radioButton : btns) {
             if (radioButton.isChecked() && radioButton != view) {
                 return radioButton;
@@ -97,8 +123,7 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-    @OnClick({R.id.centerBtn, R.id.centerCropBtn, R.id.centerInsideBtn, R.id.fitCenterBtn,
-        R.id.fitEndBtn, R.id.fitStartBtn, R.id.fitXYBtn, R.id.matrixBtn, R.id.noneBtn})
+    //@OnClick({R.id.centerBtn, R.id.centerCropBtn, R.id.centerInsideBtn, R.id.fitCenterBtn, R.id.fitEndBtn, R.id.fitStartBtn, R.id.fitXYBtn, R.id.matrixBtn, R.id.noneBtn})
     public void clickRadioButton(RadioButton view) {
         // Check to see what is clicked
         RadioButton checkedRadio = getSelectedRadio(view);
@@ -106,38 +131,38 @@ public class MainActivity extends AppCompatActivity {
             checkedRadio.setChecked(false);
         }
         // If currently checked, do nothing.
-        imageView.setPadding(0,0,0,0);
+        binding.imageView.setPadding(0,0,0,0);
         switch((String)view.getText()) {
 
             case "NO!!!!":
                 int px = dpToPx(32);
-                imageView.setPadding(px,px,px,px);
-                imageView.setScaleType(ScaleType.FIT_CENTER);
+                binding.imageView.setPadding(px,px,px,px);
+                binding.imageView.setScaleType(ScaleType.FIT_CENTER);
                 break;
             case "CENTER":
-                imageView.setScaleType(ScaleType.CENTER);
+                binding.imageView.setScaleType(ScaleType.CENTER);
                 break;
             case "CENTER_CROP":
-                imageView.setScaleType(ScaleType.CENTER_CROP);
+                binding.imageView.setScaleType(ScaleType.CENTER_CROP);
                 break;
             case "CENTER_INSIDE":
-                imageView.setScaleType(ScaleType.CENTER_INSIDE);
+                binding.imageView.setScaleType(ScaleType.CENTER_INSIDE);
                 break;
             case "FIT_CENTER":
-                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                binding.imageView.setScaleType(ScaleType.FIT_CENTER);
                 break;
             case "FIT_END":
-                imageView.setScaleType(ImageView.ScaleType.FIT_END);
+                binding.imageView.setScaleType(ScaleType.FIT_END);
                 break;
             case "FIT_START":
-                imageView.setScaleType(ImageView.ScaleType.FIT_START);
+                binding.imageView.setScaleType(ScaleType.FIT_START);
                 break;
             case "FIT_XY":
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                binding.imageView.setScaleType(ScaleType.FIT_XY);
                 break;
             case "MATRIX":
-                imageView.setScaleType(ImageView.ScaleType.MATRIX);
-                imageView.setImageMatrix(matrix);
+                binding.imageView.setScaleType(ScaleType.MATRIX);
+                binding.imageView.setImageMatrix(matrix);
                 break;
 
         }
