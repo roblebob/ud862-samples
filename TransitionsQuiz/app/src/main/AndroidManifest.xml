@@ -10,7 +10,8 @@
         <activity
             android:name="com.example.android.transitionsquiz.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.Home">
+            android:theme="@style/AppTheme.Home"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

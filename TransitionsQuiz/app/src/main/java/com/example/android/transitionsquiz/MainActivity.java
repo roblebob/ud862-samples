@@ -11,20 +11,30 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.example.android.transitionsquiz.databinding.ActivityMainBinding;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends Activity {
 
-    @Bind(R.id.grid) GridView grid;
+    ActivityMainBinding binding;
+
+    //@Bind(R.id.grid) GridView grid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        grid.setAdapter(new GridAdapter());
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View root = binding.getRoot();
+        setContentView(root);
+
+        //ButterKnife.bind(this);
+
+
+
+        binding.grid.setAdapter(new GridAdapter());
+        binding.grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 startActivity(new Intent(MainActivity.this, DetailActivity.class),
