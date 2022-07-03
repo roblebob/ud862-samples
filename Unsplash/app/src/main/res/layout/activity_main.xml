@@ -14,8 +14,8 @@
         android:indeterminateTint="@color/placeholder"
         android:indeterminateTintMode="src_in" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/image_grid"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/image_grid_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/grid_item_spacing"

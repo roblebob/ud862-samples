@@ -6,16 +6,18 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.android.unsplash.data.UnsplashService;
 import com.example.android.unsplash.data.model.Photo;
+import com.example.android.unsplash.databinding.ActivityMainBinding;
 import com.example.android.unsplash.ui.ForegroundImageView;
 import com.example.android.unsplash.ui.ItemClickSupport;
 import com.squareup.picasso.Picasso;
@@ -26,29 +28,41 @@ import butterknife.Bind;
 import butterknife.BindDimen;
 import butterknife.BindInt;
 import butterknife.ButterKnife;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+// TODO: res/values/attrs_foreground_view.xml   foregroundInsidePadding is commented
+//       PhotoViewHolder uses findViewById instead of viewBinding
+
+
+
 public class MainActivity extends Activity {
 
     private static final int PHOTO_COUNT = 12;
 
-    @Bind(R.id.image_grid) RecyclerView grid;
-    @Bind(android.R.id.empty) ProgressBar empty;
-    @BindInt(R.integer.photo_grid_columns) int columns;
-    @BindDimen(R.dimen.grid_item_spacing) int gridSpacing;
+    ActivityMainBinding binding;
+
+    //@Bind(R.id.image_grid_rv) RecyclerView grid;
+    //@Bind(android.R.id.empty) ProgressBar empty;
+    //@BindInt(R.integer.photo_grid_columns) int columns;
+    //@BindDimen(R.dimen.grid_item_spacing) int gridSpacing;
+
     private PhotoAdapter adapter;
     private String photoUrlBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View root = binding.getRoot();
+        setContentView(root);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, columns);
+//        ButterKnife.bind(this);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.photo_grid_columns));
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -66,15 +80,15 @@ public class MainActivity extends Activity {
                 }
             }
         });
-        grid.setLayoutManager(gridLayoutManager);
-        grid.addItemDecoration(new GridMarginDecoration(gridSpacing));
-        grid.setHasFixedSize(true);
+        binding.imageGridRv.setLayoutManager(gridLayoutManager);
+        binding.imageGridRv.addItemDecoration(new GridMarginDecoration((int) getResources().getDimension(R.dimen.grid_item_spacing)));
+        binding.imageGridRv.setHasFixedSize(true);
 
         photoUrlBase = "https://unsplash.it/"
                 + getResources().getDisplayMetrics().widthPixels
                 + "?image=";
 
-        ItemClickSupport.addTo(grid).setOnItemClickListener(
+        ItemClickSupport.addTo(binding.imageGridRv).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View view) {
@@ -101,8 +115,8 @@ public class MainActivity extends Activity {
                 // the first items are really boring, get the last <n>
                 adapter = new PhotoAdapter(photos.subList(photos.size() - PHOTO_COUNT, photos
                         .size()));
-                grid.setAdapter(adapter);
-                empty.setVisibility(View.GONE);
+                binding.imageGridRv.setAdapter(adapter);
+                binding.empty.setVisibility(View.GONE);
             }
 
             @Override
@@ -114,11 +128,13 @@ public class MainActivity extends Activity {
 
     /* protected */ static class PhotoViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.photo) ForegroundImageView imageView;
+        //@Bind(R.id.photo)
+        ForegroundImageView imageView;
 
         public PhotoViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            //ButterKnife.bind(this, itemView);
+            imageView = itemView.findViewById(R.id.photo);
         }
     }
 
@@ -159,7 +175,7 @@ public class MainActivity extends Activity {
         public void onBindViewHolder(final PhotoViewHolder holder, final int position) {
             final Photo photo = photos.get(position);
             String url = photoUrlBase + photo.id;
-            Picasso.with(MainActivity.this)
+            Picasso.get()
                     .load(url)
                     .placeholder(R.color.placeholder)
                     .into(holder.imageView);

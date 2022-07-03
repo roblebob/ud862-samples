@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.example.android.unsplash.databinding.ActivityDetailBinding;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -21,23 +22,29 @@ public class DetailActivity extends Activity {
 
     public static final String EXTRA_AUTHOR = "EXTRA_AUTHOR";
 
-    @Bind(R.id.toolbar)Toolbar toolbar;
-    @Bind(R.id.photo) ImageView imageView;
-    @Bind(R.id.author) TextView author;
-    @BindInt(R.integer.detail_desc_slide_duration) int slideDuration;
+    ActivityDetailBinding binding;
+
+//    @Bind(R.id.toolbar)Toolbar toolbar;
+//    @Bind(R.id.photo) ImageView imageView;
+//    @Bind(R.id.author) TextView author;
+//    @BindInt(R.integer.detail_desc_slide_duration) int slideDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
-        ButterKnife.bind(this);
+        binding = ActivityDetailBinding.inflate(getLayoutInflater());
+        View root = binding.getRoot();
+        setContentView(root);
 
-        Picasso.with(this)
+
+//        ButterKnife.bind(this);
+
+        Picasso.get()
                 .load(getIntent().getData())
                 .placeholder(R.color.placeholder)
-                .into(imageView);
-        author.setText("—" + getIntent().getStringExtra(EXTRA_AUTHOR));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                .into(binding.photo);
+        binding.author.setText("—" + getIntent().getStringExtra(EXTRA_AUTHOR));
+        binding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finishAfterTransition();
@@ -49,7 +56,7 @@ public class DetailActivity extends Activity {
             slide.addTarget(R.id.description);
             slide.setInterpolator(AnimationUtils.loadInterpolator(this, android.R.interpolator
                     .linear_out_slow_in));
-            slide.setDuration(slideDuration);
+            slide.setDuration(getResources().getInteger(R.integer.detail_desc_slide_duration));
             getWindow().setEnterTransition(slide);
         }
     }
