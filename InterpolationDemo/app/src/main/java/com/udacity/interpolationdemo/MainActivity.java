@@ -16,13 +16,18 @@
 package com.udacity.interpolationdemo;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.Interpolator;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.udacity.interpolationdemo.databinding.ActivityMainBinding;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,12 +35,17 @@ import butterknife.OnItemSelected;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.interpolator_spinner)Spinner interpolatorSpinner;
-    @BindView(R.id.duration_spinner)Spinner duratorSpinner;
-    @BindView(R.id.textView)TextView textView;
+    ActivityMainBinding binding;
+
+//    @BindView(R.id.interpolator_spinner)Spinner interpolatorSpinner;
+//    @BindView(R.id.duration_spinner)Spinner duratorSpinner;
+//    @BindView(R.id.textView)TextView textView;
+
 
     private static final String PACKAGE = "android.view.animation.";
-    private static final String PACKAGE_V4 = "android.support.v4.view.animation.";
+    //private static final String PACKAGE_V4 = "android.support.v4.view.animation.";
+    private static final String PACKAGE_V4 = "androidx.interpolator.view.animation.";
+
     private int duration;
     private Interpolator interpolator;
 
@@ -43,8 +53,38 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View root = binding.getRoot();
+        setContentView(root);
+//        ButterKnife.bind(this);
+
+
+        binding.durationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.e("durationSpinner", "onItemSelected(..., " + i + " ,... )");
+                MainActivity.this.durationSelected( (Spinner) adapterView, i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Log.e("durationSpinner", "onNothingSelected(...)");
+            }
+        });
+
+
+        binding.interpolatorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.e("interpolatorSpinner", "onItemSelected(..., " + i + " ,... )");
+                MainActivity.this.onItemSelected((Spinner) adapterView, i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Log.e("interpolatorSpinner", "onNothingSelected(...)");
+            }
+        });
     }
 
     @Override
@@ -69,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnItemSelected({R.id.duration_spinner})
+    //@OnItemSelected({R.id.duration_spinner})
     void durationSelected(Spinner spinner, int position) {
         String durationString = (String) spinner.getAdapter().getItem(position);
         switch(durationString) {
@@ -89,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         // Kick off transition
-        int item = interpolatorSpinner.getSelectedItemPosition();
-        onItemSelected(interpolatorSpinner, position);
+        int item = binding.interpolatorSpinner.getSelectedItemPosition();
+        onItemSelected(binding.interpolatorSpinner, /* position */ item);
     }
 
     String findFullInterpolatorPath(String className) {
@@ -101,12 +141,13 @@ public class MainActivity extends AppCompatActivity {
         else return PACKAGE + className;
     }
 
-    @OnItemSelected({R.id.interpolator_spinner})
+    //@OnItemSelected({R.id.interpolator_spinner})
     void onItemSelected(Spinner spinner, int position) {
+        Log.e(MainActivity.class.getSimpleName() + " --- interpolationSpinner --->",  " " + position);
         String interpolatorName = (String) spinner.getAdapter().getItem(position);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        textView.setTranslationY(metrics.heightPixels);
+        binding.textView.setTranslationY(metrics.heightPixels);
 
         try {
             String path = findFullInterpolatorPath(interpolatorName);
@@ -114,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
 
             interpolator = (Interpolator) Class.forName(path).newInstance();
-            textView.animate().setInterpolator(interpolator)
+            binding.textView.animate().setInterpolator(interpolator)
                     .setDuration(duration)
                     .setStartDelay(500)
                     .translationYBy(-metrics.heightPixels)
@@ -124,9 +165,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @OnItemSelected(value=R.id.interpolator_spinner, callback = OnItemSelected.Callback.NOTHING_SELECTED)
-    void onNothingSelected() {
-
-    }
+//    @OnItemSelected(value=R.id.interpolator_spinner, callback = OnItemSelected.Callback.NOTHING_SELECTED)
+//    void onNothingSelected() {
+//
+//    }
 
 }

@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdk 32
+    buildToolsVersion '31.0.0'
 
     defaultConfig {
         applicationId "com.udacity.interpolationdemo"
-        minSdkVersion 19
-        targetSdkVersion 25
+        minSdk 24
+        targetSdk 32
         versionCode 1
         versionName "1.0"
     }
@@ -19,10 +19,17 @@ android {
     }
 }
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.jakewharton:butterknife:8.4.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+android {
+    buildFeatures {
+        viewBinding true
+    }
+}
 
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 }
