@@ -29,9 +29,9 @@ import android.widget.TextView;
 
 import com.udacity.interpolationdemo.databinding.ActivityMainBinding;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnItemSelected;
+//import butterknife.BindView;
+//import butterknife.ButterKnife;
+//import butterknife.OnItemSelected;
 
 public class MainActivity extends AppCompatActivity {
 
